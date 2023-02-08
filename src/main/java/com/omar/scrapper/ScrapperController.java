@@ -20,7 +20,8 @@ public class ScrapperController {
 	@PostMapping("/scrape")
 	public Recipe scrape(@RequestBody Url url) throws IOException {		
 		
+		// https://www.kingarthurbaking.com/recipes/chocolate-chip-cookies-recipe
 		return scrapperService.scrape(url.getUrl());
-		//return scrapperService.scrape("https://www.kingarthurbaking.com/recipes/chocolate-chip-cookies-recipe");
+		
 	}
 }
