@@ -1,6 +1,7 @@
 # scrapper
 
-run the server with maven: mvn clean compile exec:java
+Run the server with maven: 
+mvn clean compile exec:java
 
 In Postman: 
 
