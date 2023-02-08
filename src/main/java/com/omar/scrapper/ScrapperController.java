@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ScrapperController {
 	
-	public ScrapperService scrapperService;
+	private ScrapperService scrapperService;
 	
 	@Autowired
 	public ScrapperController(ScrapperService scrapperService) {
