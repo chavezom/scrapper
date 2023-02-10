@@ -1,7 +1,7 @@
 package com.omar.scrapper;
 
 public class Url {
-	
+
 	private String url;
 
 	public String getUrl() {

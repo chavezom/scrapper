@@ -16,16 +16,10 @@ import org.springframework.web.server.ResponseStatusException;
 public class ScrapperService {
 	
 	public Recipe scrape(String url){
-		Document doc = null;
-
-		try {
-			doc = Jsoup.connect(url).get();
-		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-		}
+		Document doc = urlConnect(url);
 
 		List<String> ingredientList = new ArrayList<String>();
-		List<String> instructionsList = new ArrayList<String>();
+		List<Instruction> instructionsList = new ArrayList<Instruction>();
 
 		System.out.println(doc.title());
 
@@ -43,9 +37,13 @@ public class ScrapperService {
 		if (elements.size() > 0) {
 			Elements instructions = elements.first().select("li");
 			System.out.println("Instructions:");
-			for (Element instruction : instructions) {
-				System.out.println(instruction.text());
-				instructionsList.add(instruction.text());
+			for (Element instruction_element : instructions) {
+				System.out.println(instruction_element.text());
+				System.out.println(instruction_element.select("img").attr("src"));
+				Instruction instruction = new Instruction();
+				instruction.setInstruction(instruction_element.text());
+				instruction.setImage(instruction_element.select("img").attr("src"));
+				instructionsList.add(instruction);
 			}
 		}
 		
@@ -54,5 +52,23 @@ public class ScrapperService {
 		recipe.setInstructions(instructionsList);
 		
 		return recipe;
+	}
+
+	public String recipeSchema(String url){
+        Document doc = urlConnect(url);
+
+		return doc.head().select("script[type*=application/ld+json]").html();
+	}
+
+	private Document urlConnect(String url){
+		Document doc;
+
+		try {
+			doc = Jsoup.connect(url).get();
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+		}
+
+		return doc;
 	}
 }

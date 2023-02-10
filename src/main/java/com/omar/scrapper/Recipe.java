@@ -3,14 +3,14 @@ package com.omar.scrapper;
 import java.util.List;
 
 public class Recipe {
-	private List<String> instructions;
+	private List<Instruction> instructions;
 	private List<String> ingredients;
 	
-	public List<String> getInstructions() {
+	public List<Instruction> getInstructions() {
 		return instructions;
 	}
 	
-	public void setInstructions(List<String> instructions) {
+	public void setInstructions(List<Instruction> instructions) {
 		this.instructions = instructions;
 	}
 	
