@@ -30,7 +30,7 @@ public class ScrapperService {
 	}
 
 	private Scrapper getScrapper(String url) throws URISyntaxException {
-		URI uri = new URI("https://www.kingarthurbaking.com/recipes/chocolate-chip-cookies-recipe");
+		URI uri = new URI(url);
 		String host = uri.getHost();
 		if (host.equalsIgnoreCase("www.kingarthurbaking.com")){
 		  	return new Kingarthurbaking();
