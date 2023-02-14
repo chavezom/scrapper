@@ -1,6 +1,8 @@
 package com.omar.scrapper;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -21,13 +23,13 @@ public class ScrapperController {
 	}
 
 	@PostMapping("/scrape")
-	public Recipe scrape(@RequestBody Url url) throws ResponseStatusException {
+	public Recipe scrape(@RequestBody Url url) throws ResponseStatusException, URISyntaxException {
 		// https://www.kingarthurbaking.com/recipes/chocolate-chip-cookies-recipe
 		return scrapperService.scrape(url.getUrl());
 	}
 
-	@PostMapping(value = "/recipe_schema", produces = "application/ld+json")
-	public String recipeSchema(@RequestBody Url url) throws ResponseStatusException {
-		return scrapperService.recipeSchema(url.getUrl());
+	@PostMapping(value = "/scrape2")
+	public Recipe scrape2(@RequestBody Url url) throws ResponseStatusException, URISyntaxException {
+		return scrapperService.scrape2(url.getUrl());
 	}
 }

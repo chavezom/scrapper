@@ -1,9 +1,15 @@
 package com.omar.scrapper;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,61 +20,22 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ScrapperService {
-	
-	public Recipe scrape(String url){
-		Document doc = urlConnect(url);
 
-		List<String> ingredientList = new ArrayList<String>();
-		List<Instruction> instructionsList = new ArrayList<Instruction>();
-
-		System.out.println(doc.title());
-
-		Elements elements = doc.getElementsByClass("ingredients-list");
-		if (elements.size() > 0){
-			Elements ingredients = elements.first().select("li");
-			System.out.println("Ingredients:");
-			for (Element ingredient : ingredients) {
-				System.out.println(ingredient.text());
-				ingredientList.add(ingredient.text());
-			}
-		}
-
-		elements = doc.getElementsByClass("recipe__instructions");
-		if (elements.size() > 0) {
-			Elements instructions = elements.first().select("li");
-			System.out.println("Instructions:");
-			for (Element instruction_element : instructions) {
-				System.out.println(instruction_element.text());
-				System.out.println(instruction_element.select("img").attr("src"));
-				Instruction instruction = new Instruction();
-				instruction.setInstruction(instruction_element.text());
-				instruction.setImage(instruction_element.select("img").attr("src"));
-				instructionsList.add(instruction);
-			}
-		}
-		
-		Recipe recipe = new Recipe();
-		recipe.setIngredients(ingredientList);
-		recipe.setInstructions(instructionsList);
-		
-		return recipe;
+	public Recipe scrape(String url) throws URISyntaxException{
+		return getScrapper(url).scrape(url);
 	}
 
-	public String recipeSchema(String url){
-        Document doc = urlConnect(url);
-
-		return doc.head().select("script[type*=application/ld+json]").html();
+	public Recipe scrape2(String url) throws URISyntaxException{
+		return getScrapper(url).scrape2(url);
 	}
 
-	private Document urlConnect(String url){
-		Document doc;
-
-		try {
-			doc = Jsoup.connect(url).get();
-		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
+	private Scrapper getScrapper(String url) throws URISyntaxException {
+		URI uri = new URI("https://www.kingarthurbaking.com/recipes/chocolate-chip-cookies-recipe");
+		String host = uri.getHost();
+		if (host.equalsIgnoreCase("www.kingarthurbaking.com")){
+		  	return new Kingarthurbaking();
+		} else {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Unprocessable Entity");
 		}
-
-		return doc;
 	}
 }
